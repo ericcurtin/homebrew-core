@@ -18,15 +18,18 @@ class Vllm < Formula
   depends_on "python@3.13"
 
   on_macos do
-    depends_on arch: :arm64
-    depends_on "maturin" => :build
+    on_arm do
+      depends_on "maturin" => :build
+    end
   end
 
   # vllm-metal plugin for macOS Apple Silicon
   resource "vllm-metal" do
     on_macos do
-      url "https://github.com/vllm-project/vllm-metal/archive/refs/tags/v0.1.0-20260111-163800.tar.gz"
-      sha256 "dc044e472d598162ad1c559789d83c8041a807051bda9373326c216003049adf"
+      on_arm do
+        url "https://github.com/vllm-project/vllm-metal/archive/refs/tags/v0.1.0-20260111-163800.tar.gz"
+        sha256 "dc044e472d598162ad1c559789d83c8041a807051bda9373326c216003049adf"
+      end
     end
   end
 
@@ -34,7 +37,7 @@ class Vllm < Formula
     python3 = "python3.13"
     venv = virtualenv_create(libexec, python3)
 
-    if OS.mac?
+    if OS.mac? && Hardware::CPU.arm?
       # On macOS Apple Silicon, install vllm-metal plugin
       # which provides Metal/MLX acceleration
       resource("vllm-metal").stage do
@@ -54,7 +57,7 @@ class Vllm < Formula
   end
 
   def caveats
-    if OS.mac?
+    if OS.mac? && Hardware::CPU.arm?
       <<~EOS
         vLLM has been installed with Metal/MLX support via vllm-metal plugin
         for Apple Silicon Macs.
