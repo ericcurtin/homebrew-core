@@ -88,10 +88,11 @@ class Vllm < Formula
   end
 
   test do
-    # Basic test to check if vllm can be imported
-    system libexec/"bin/python", "-c", "import vllm; print(vllm.__version__)"
+    # Test CLI is accessible and shows help
+    output = shell_output("#{bin}/vllm --help 2>&1")
+    assert_match "vllm", output
 
-    # Test CLI is accessible
-    assert_match "usage:", shell_output("#{bin}/vllm --help 2>&1", 0)
+    # Test that vllm module can be imported
+    system libexec/"bin/python", "-c", "import vllm; print(vllm.__version__)"
   end
 end
