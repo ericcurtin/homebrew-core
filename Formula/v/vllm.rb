@@ -40,6 +40,7 @@ class Vllm < Formula
       resource("vllm-metal").stage do
         system "maturin", "build", "--release", "-o", "dist"
         wheel = Dir["dist/*.whl"].first
+        odie "Failed to build vllm-metal wheel" if wheel.nil?
         venv.pip_install wheel
       end
     end
