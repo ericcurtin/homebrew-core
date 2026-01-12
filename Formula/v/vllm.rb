@@ -25,10 +25,8 @@ class Vllm < Formula
   # vllm-metal plugin for macOS Apple Silicon
   resource "vllm-metal" do
     on_macos do
-      on_arm do
-        url "https://github.com/vllm-project/vllm-metal/archive/refs/tags/v0.1.0-20260111-163800.tar.gz"
-        sha256 "dc044e472d598162ad1c559789d83c8041a807051bda9373326c216003049adf"
-      end
+      url "https://github.com/vllm-project/vllm-metal/archive/refs/tags/v0.1.0-20260111-163800.tar.gz"
+      sha256 "dc044e472d598162ad1c559789d83c8041a807051bda9373326c216003049adf"
     end
   end
 
