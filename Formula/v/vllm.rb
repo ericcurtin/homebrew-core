@@ -37,26 +37,19 @@ class Vllm < Formula
     if OS.mac?
       # On macOS Apple Silicon, install vllm-metal plugin
       # which provides Metal/MLX acceleration
-
-      # First, install vllm-metal from the resource
       resource("vllm-metal").stage do
         system "maturin", "build", "--release", "-o", "dist"
         wheel = Dir["dist/*.whl"].first
         venv.pip_install wheel
       end
-
-      # Then install vllm core (CPU-only build on macOS)
-      # The vllm-metal plugin provides the Metal acceleration
-      ENV["VLLM_TARGET_DEVICE"] = "cpu"
-      ENV["MAX_JOBS"] = ENV.make_jobs.to_s
-      venv.pip_install_and_link buildpath
-    else
-      # On Linux, install vllm with CPU support (default)
-      # For CUDA support, users should use pip with CUDA wheels
-      ENV["VLLM_TARGET_DEVICE"] = "cpu"
-      ENV["MAX_JOBS"] = ENV.make_jobs.to_s
-      venv.pip_install_and_link buildpath
     end
+
+    # Install vllm with CPU support
+    # On macOS: The vllm-metal plugin provides the Metal acceleration
+    # On Linux: For CUDA support, users should use pip with CUDA wheels
+    ENV["VLLM_TARGET_DEVICE"] = "cpu"
+    ENV["MAX_JOBS"] = ENV.make_jobs.to_s
+    venv.pip_install_and_link buildpath
   end
 
   def caveats
